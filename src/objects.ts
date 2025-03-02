@@ -8,9 +8,18 @@ import { Question, QuestionType } from "./interfaces/question";
 export function makeBlankQuestion(
     id: number,
     name: string,
-    type: QuestionType
+    type: QuestionType,
 ): Question {
-    return {};
+    return {
+        id: id,
+        name: name,
+        body: "",
+        type: type,
+        options: [],
+        expected: "",
+        points: 1,
+        published: false,
+    };
 }
 
 /**
@@ -21,7 +30,9 @@ export function makeBlankQuestion(
  * HINT: Look up the `trim` and `toLowerCase` functions.
  */
 export function isCorrect(question: Question, answer: string): boolean {
-    return false;
+    let trimmedAnswer: string = answer.trim();
+    let loweredAnswer: string = trimmedAnswer.toLowerCase();
+    return loweredAnswer === question.expected.toLowerCase();
 }
 
 /**
@@ -31,7 +42,12 @@ export function isCorrect(question: Question, answer: string): boolean {
  * be exactly one of the options.
  */
 export function isValid(question: Question, answer: string): boolean {
-    return false;
+    let validity: boolean = false;
+    if (question.type === "short_answer_question") validity = true;
+    else if (question.options.includes(answer)) {
+        validity = true;
+    }
+    return validity;
 }
 
 /**
@@ -41,7 +57,8 @@ export function isValid(question: Question, answer: string): boolean {
  * name "My First Question" would become "9: My First Q".
  */
 export function toShortForm(question: Question): string {
-    return "";
+    let joined: string = question.id + ": " + question.name.slice(0, 10);
+    return joined;
 }
 
 /**
@@ -62,7 +79,17 @@ export function toShortForm(question: Question): string {
  * Check the unit tests for more examples of what this looks like!
  */
 export function toMarkdown(question: Question): string {
-    return "";
+    let mark: string = "# " + question.name + "\n" + question.body;
+    if (question.type === "multiple_choice_question") {
+        mark +=
+            "\n" +
+            question.options
+                .map(function (option) {
+                    return "- " + option;
+                })
+                .join("\n");
+    }
+    return mark;
 }
 
 /**
@@ -70,7 +97,11 @@ export function toMarkdown(question: Question): string {
  * `newName`.
  */
 export function renameQuestion(question: Question, newName: string): Question {
-    return question;
+    let renamedQuestion: Question = {
+        ...question,
+        name: newName,
+    };
+    return renamedQuestion;
 }
 
 /**
@@ -79,7 +110,11 @@ export function renameQuestion(question: Question, newName: string): Question {
  * published; if it was published, now it should be not published.
  */
 export function publishQuestion(question: Question): Question {
-    return question;
+    let newQuestion: Question = {
+        ...question,
+        published: !question.published,
+    };
+    return newQuestion;
 }
 
 /**
@@ -89,7 +124,13 @@ export function publishQuestion(question: Question): Question {
  * The `published` field should be reset to false.
  */
 export function duplicateQuestion(id: number, oldQuestion: Question): Question {
-    return oldQuestion;
+    let duplicateQuestion: Question = {
+        ...oldQuestion,
+        id: id,
+        name: "Copy of " + oldQuestion.name,
+        published: false,
+    };
+    return duplicateQuestion;
 }
 
 /**
@@ -100,7 +141,11 @@ export function duplicateQuestion(id: number, oldQuestion: Question): Question {
  * Check out the subsection about "Nested Fields" for more information.
  */
 export function addOption(question: Question, newOption: string): Question {
-    return question;
+    let newQuestion: Question = {
+        ...question,
+        options: [...question.options, newOption],
+    };
+    return newQuestion;
 }
 
 /**
@@ -115,7 +160,14 @@ export function mergeQuestion(
     id: number,
     name: string,
     contentQuestion: Question,
-    { points }: { points: number }
+    { points }: { points: number },
 ): Question {
-    return contentQuestion;
+    let mergedQuestion: Question = {
+        ...contentQuestion,
+        id: id,
+        name: name,
+        points: points,
+        published: false,
+    };
+    return mergedQuestion;
 }
