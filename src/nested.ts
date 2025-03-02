@@ -19,20 +19,14 @@ export function getPublishedQuestions(questions: Question[]): Question[] {
  * `expected`, and an empty array for its `options`.
  */
 export function getNonEmptyQuestions(questions: Question[]): Question[] {
-    let nonemptyBodies: Question[] = questions.filter(
+    let nonemptyQuestions: Question[] = questions.filter(
         (question: Question): boolean =>
-            question.body !== "" && question.body !== " ",
-    );
-    let nonemptyExpected: Question[] = nonemptyBodies.filter(
-        (question: Question): boolean =>
-            question.expected !== "" && question.expected !== " ",
-    );
-    let nonemptyQuestions: Question[] = nonemptyExpected.filter(
-        (question: Question): boolean => question.options.length !== 0,
+            question.body.trim() !== "" ||
+            question.expected.trim() !== "" ||
+            question.options.length !== 0,
     );
     return nonemptyQuestions;
 }
-
 /***
  * Consumes an array of questions and returns the question with the given `id`. If the
  * question is not found, return `null` instead.
@@ -114,7 +108,8 @@ id,name,options,points,published
  * Check the unit tests for more examples!
  */
 export function toCSV(questions: Question[]): string {
-    let questionCSV: string = questions
+    let questionCSV: string = "id,name,options,points,published" + "\n";
+    questionCSV += questions
         .map(
             (question: Question): string =>
                 `${question.id},${question.name},${question.options.length},${question.points},${question.published}`,
@@ -242,7 +237,18 @@ export function editOption(
     targetOptionIndex: number,
     newOption: string,
 ): Question[] {
-    return [];
+    return questions.map((question: Question): Question => {
+        if (question.id !== targetId) {
+            return question;
+        }
+        let newOptions: string[] =
+            targetOptionIndex === -1 ?
+                [...question.options, newOption]
+            :   question.options.map((option, index) =>
+                    index === targetOptionIndex ? newOption : option,
+                );
+        return { ...question, options: newOptions };
+    });
 }
 
 /***
