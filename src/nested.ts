@@ -1,5 +1,6 @@
 import { Answer } from "./interfaces/answer";
 import { Question, QuestionType } from "./interfaces/question";
+import { makeBlankQuestion } from "./objects";
 
 /**
  * Consumes an array of questions and returns a new array with only the questions
@@ -116,7 +117,7 @@ export function toCSV(questions: Question[]): string {
     let questionCSV: string = questions
         .map(
             (question: Question): string =>
-                `  ${question.id},${question.name},${question.options.length},${question.points},${question.published} `,
+                `${question.id},${question.name},${question.options.length},${question.points},${question.published}`,
         )
         .join("\n");
     return questionCSV;
@@ -144,7 +145,13 @@ export function makeAnswers(questions: Question[]): Answer[] {
  * each question is now published, regardless of its previous published status.
  */
 export function publishAll(questions: Question[]): Question[] {
-    return [];
+    let newQuestions: Question[] = questions.map(
+        (question: Question): Question => ({
+            ...question,
+            published: true,
+        }),
+    );
+    return newQuestions;
 }
 
 /***
@@ -152,7 +159,8 @@ export function publishAll(questions: Question[]): Question[] {
  * are the same type. They can be any type, as long as they are all the SAME type.
  */
 export function sameType(questions: Question[]): boolean {
-    return false;
+    let firstType: string = questions[0].type;
+    return questions.every((question: Question) => question.type === firstType);
 }
 
 /***
@@ -166,7 +174,9 @@ export function addNewQuestion(
     name: string,
     type: QuestionType,
 ): Question[] {
-    return [];
+    let blankQuestion: Question = makeBlankQuestion(id, name, type);
+    let newQuestions: Question[] = [...questions, blankQuestion];
+    return newQuestions;
 }
 
 /***
@@ -179,7 +189,13 @@ export function renameQuestionById(
     targetId: number,
     newName: string,
 ): Question[] {
-    return [];
+    let newQuestions: Question[] = [...questions];
+    let foundIndex: number = newQuestions.findIndex(
+        (question: Question): boolean => question.id === targetId,
+    );
+    let foundQuestion: Question = newQuestions[foundIndex];
+    newQuestions.splice(foundIndex, 1, { ...foundQuestion, name: newName });
+    return newQuestions;
 }
 
 /***
