@@ -1,6 +1,6 @@
 import { Answer } from "./interfaces/answer";
 import { Question, QuestionType } from "./interfaces/question";
-import { makeBlankQuestion } from "./objects";
+import { duplicateQuestion, makeBlankQuestion } from "./objects";
 
 /**
  * Consumes an array of questions and returns a new array with only the questions
@@ -159,8 +159,12 @@ export function publishAll(questions: Question[]): Question[] {
  * are the same type. They can be any type, as long as they are all the SAME type.
  */
 export function sameType(questions: Question[]): boolean {
-    let firstType: string = questions[0].type;
-    return questions.every((question: Question) => question.type === firstType);
+    if (questions.length === 0) return true;
+    let newQuestions: Question[] = [...questions];
+    let firstType: QuestionType = newQuestions[0].type;
+    return newQuestions.every(
+        (question: Question) => question.type === firstType,
+    );
 }
 
 /***
@@ -210,7 +214,16 @@ export function changeQuestionTypeById(
     targetId: number,
     newQuestionType: QuestionType,
 ): Question[] {
-    return [];
+    let newQuestions: Question[] = [...questions];
+    let foundIndex: number = newQuestions.findIndex(
+        (question: Question): boolean => question.id === targetId,
+    );
+    let foundQuestion: Question = newQuestions[foundIndex];
+    let changedQuestion: Question = { ...foundQuestion, type: newQuestionType };
+    if (changedQuestion.type !== "multiple_choice_question")
+        changedQuestion.options = [];
+    newQuestions.splice(foundIndex, 1, changedQuestion);
+    return newQuestions;
 }
 
 /**
@@ -243,5 +256,12 @@ export function duplicateQuestionInArray(
     targetId: number,
     newId: number,
 ): Question[] {
-    return [];
+    let newQuestions: Question[] = [...questions];
+    let foundIndex: number = newQuestions.findIndex(
+        (question: Question): boolean => question.id === targetId,
+    );
+    let foundQuestion: Question = newQuestions[foundIndex];
+    let newQuestion: Question = duplicateQuestion(newId, foundQuestion);
+    newQuestions.splice(foundIndex + 1, 0, newQuestion);
+    return newQuestions;
 }
