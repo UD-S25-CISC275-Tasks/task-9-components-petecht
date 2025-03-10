@@ -6,20 +6,20 @@ export function StartAttempt(): React.JSX.Element {
 
     const [progress, setProgress] = useState<boolean>(false);
 
-    const startQuiz = () => {
+    function startQuiz(): void {
         if (numAttempts > 0 && !progress) {
             setProgress(true);
             setAttempts((prev) => prev - 1);
         }
-    };
+    }
 
-    const stopQuiz = () => {
+    function stopQuiz(): void {
         setProgress(false);
-    };
+    }
 
-    const mulligan = () => {
+    function mulligan(): void {
         setAttempts((prev) => prev + 1);
-    };
+    }
 
     return (
         <div>

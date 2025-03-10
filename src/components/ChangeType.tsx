@@ -7,13 +7,13 @@ export function ChangeType(): React.JSX.Element {
         "short_answer_question",
     );
 
-    const switchType = () => {
+    function switchType(): void {
         setQuestionType((prev) =>
             prev === "short_answer_question" ?
                 "multiple_choice_question"
             :   "short_answer_question",
         );
-    };
+    }
 
     return (
         <div>
