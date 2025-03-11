@@ -1,36 +1,28 @@
 import React, { useState } from "react";
 import { Button } from "react-bootstrap";
 
-// Helper function: returns a random integer between 1 and 6
+// Dice roll helper (returns 1–6)
 function d6(): number {
     return Math.floor(Math.random() * 6) + 1;
 }
 
+// Ensure two different initial values
+function getTwoDifferentDice(): [number, number] {
+    let left = d6();
+    let right = d6();
+    while (left === right) {
+        right = d6();
+    }
+    return [left, right];
+}
+
 export function TwoDice(): React.JSX.Element {
-    // Initial dice values must be different
-    const [leftDie, setLeftDie] = useState<number>(() => {
-        let first = d6();
-        let second = d6();
-        while (first === second) {
-            second = d6();
-        }
-        return first;
-    });
-    const [rightDie, setRightDie] = useState<number>(() => {
-        let second = d6();
-        while (second === leftDie) {
-            second = d6();
-        }
-        return second;
-    });
+    const [initialLeft, initialRight] = getTwoDifferentDice();
+    const [leftDie, setLeftDie] = useState<number>(initialLeft);
+    const [rightDie, setRightDie] = useState<number>(initialRight);
 
-    function leftRoll(): void {
-        setLeftDie(d6());
-    }
-
-    function rightRoll(): void {
-        setRightDie(d6());
-    }
+    const rollLeft = () => setLeftDie(d6());
+    const rollRight = () => setRightDie(d6());
 
     const isWin = leftDie === rightDie && leftDie !== 1;
     const isLose = leftDie === 1 && rightDie === 1;
@@ -42,8 +34,8 @@ export function TwoDice(): React.JSX.Element {
                 {rightDie}
             </span>
             <div>
-                <Button onClick={leftRoll}>Roll Left</Button>
-                <Button onClick={rightRoll}>Roll Right</Button>
+                <Button onClick={rollLeft}>Roll Left</Button>
+                <Button onClick={rollRight}>Roll Right</Button>
             </div>
             {isLose && <p>You Lose!</p>}
             {!isLose && isWin && <p>You Win!</p>}

@@ -9,7 +9,7 @@ export function StartAttempt(): React.JSX.Element {
     function startQuiz(): void {
         if (numAttempts > 0 && !progress) {
             setProgress(true);
-            setAttempts((prev) => prev - 1);
+            setAttempts(numAttempts - 1);
         }
     }
 
@@ -18,7 +18,7 @@ export function StartAttempt(): React.JSX.Element {
     }
 
     function mulligan(): void {
-        setAttempts((prev) => prev + 1);
+        setAttempts(numAttempts + 1);
     }
 
     return (
