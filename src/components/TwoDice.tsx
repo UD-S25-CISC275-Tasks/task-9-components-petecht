@@ -34,10 +34,14 @@ export function TwoDice(): React.JSX.Element {
     return (
         <div>
             <span data-testid="left-die">{leftDie}</span>
-            <span data-testid="right-die">{rightDie}</span>
-            <div>
+            <span data-testid="right-die" style={{ marginLeft: "10px" }}>
+                {rightDie}
+            </span>
+            <div style={{ marginTop: "10px" }}>
                 <Button onClick={rollLeft}>Roll Left</Button>
-                <Button onClick={rollRight}>Roll Right</Button>
+                <Button onClick={rollRight} style={{ marginLeft: "10px" }}>
+                    Roll Right
+                </Button>
             </div>
             {isLose && <p>You Lose!</p>}
             {!isLose && isWin && <p>You Win!</p>}
