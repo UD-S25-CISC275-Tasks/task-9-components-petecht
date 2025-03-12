@@ -17,8 +17,7 @@ function App(): React.JSX.Element {
             <header className="App-header">
                 UD CISC275 with React Hooks and TypeScript
             </header>
-            <hr></hr>
-            {/* <DoubleHalf></DoubleHalf> */}
+            <hr></hr>/<DoubleHalf></DoubleHalf>
             <hr></hr>
             <ChooseTeam></ChooseTeam>
             <hr></hr>
